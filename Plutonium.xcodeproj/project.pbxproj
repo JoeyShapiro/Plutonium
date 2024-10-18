@@ -10,9 +10,33 @@
 		CD55B8562CBDEBD600A4B0D8 /* Plutonium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Plutonium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CD55B8702CBE038D00A4B0D8 /* Exceptions for "Plutonium" folder in "Plutonium" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				shader.metal,
+			);
+			target = CD55B8552CBDEBD600A4B0D8 /* Plutonium */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		CD55B8712CBE038D00A4B0D8 /* Exceptions for "Plutonium" folder in "Copy Bundle Resources" phase from "Plutonium" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = CD55B8542CBDEBD600A4B0D8 /* Resources */;
+			membershipExceptions = (
+				shader.metal,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		CD55B8582CBDEBD600A4B0D8 /* Plutonium */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CD55B8702CBE038D00A4B0D8 /* Exceptions for "Plutonium" folder in "Plutonium" target */,
+				CD55B8712CBE038D00A4B0D8 /* Exceptions for "Plutonium" folder in "Copy Bundle Resources" phase from "Plutonium" target */,
+			);
 			path = Plutonium;
 			sourceTree = "<group>";
 		};

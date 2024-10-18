@@ -11,30 +11,41 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+    
+    @State private var map: [[Int]] = [[1, 0, 0]]
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+        HStack {
+            VStack {
+                List {
+                    ForEach(items) { item in
+                        Text(item.timestamp.description)
                     }
+                    .onDelete(perform: deleteItems)
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                .navigationBarBackButtonHidden(true)
+                Canvas(
+                    opaque: true,
+                    colorMode: .linear,
+                    rendersAsynchronously: false
+                ) { context, size in
+                    let rect = CGRect(origin: .zero, size: size)
+                    
+                    
+                    let trianglePath = Path { path in
+                        path.move(to: CGPoint(x: size.width * 0.2, y: size.width * 0.8))
+                        path.addLine(to: CGPoint(x: size.width * 0.8, y: size.width * 0.8))
+                        path.addLine(to: CGPoint(x: size.width * 0.5, y: size.width * 0.2))
+                        path.closeSubpath()
                     }
+//                    context.stroke(trianglePath, with: .color(.blue), lineWidth: 5)
+                    context.fill(trianglePath, with: .color(.red))
                 }
             }
-        } detail: {
-            Text("Select an item")
+            MetalView(map: $map)//.aspectRatio(1/1, contentMode: .fit)
         }
+//            .frame(width: 1280, height: 720)
+            
     }
 
     private func addItem() {
@@ -51,9 +62,4 @@ struct ContentView: View {
             }
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
