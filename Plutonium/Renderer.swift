@@ -10,6 +10,7 @@ import MetalKit
 struct Uniforms {
     var resolution: SIMD2<Float>
     var scale: SIMD2<Float>
+    var pos: SIMD2<Float>
 }
 
 class Renderer: NSObject, MTKViewDelegate {
@@ -27,21 +28,17 @@ class Renderer: NSObject, MTKViewDelegate {
     ]
     var vertexBuffer: MTLBuffer?
     
-    init?(metalView: MTKView) {
-        guard let device = MTLCreateSystemDefaultDevice(),
-              let commandQueue = device.makeCommandQueue() else {
-            return nil
-        }
+    init(device: MTLDevice) {
+        guard let commandQueue = device.makeCommandQueue() else { fatalError("Failed to create command queue") }
         
         self.device = device
         self.commandQueue = commandQueue
         
-        metalView.device = device
-        
-        uniforms = Uniforms(resolution: SIMD2<Float>(Float(metalView.drawableSize.width),
-                                                     Float(metalView.drawableSize.height)),
-                            scale: SIMD2<Float>(Float(metalView.drawableSize.width/16),
-                                                Float(metalView.drawableSize.height/16)))
+        uniforms = Uniforms(resolution: SIMD2<Float>(Float(1),
+                                                     Float(1)),
+                            scale: SIMD2<Float>(Float(1),
+                                                Float(1)),
+                            pos: SIMD2<Float>(0, 0))
         uniformsBuffer = device.makeBuffer(bytes: &uniforms,
                                            length: MemoryLayout<Uniforms>.stride,
                                            options: [])!
@@ -54,13 +51,12 @@ class Renderer: NSObject, MTKViewDelegate {
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         pipelineDescriptor.vertexFunction = vertexFunction
         pipelineDescriptor.fragmentFunction = fragmentFunction
-        pipelineDescriptor.colorAttachments[0].pixelFormat = metalView.colorPixelFormat
+        pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         
         do {
             pipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
         } catch {
-            print("Unable to create render pipeline state: \(error)")
-            return nil
+            fatalError("Unable to create render pipeline state: \(error)")
         }
         
         super.init()
@@ -71,6 +67,11 @@ class Renderer: NSObject, MTKViewDelegate {
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         uniforms.resolution = SIMD2<Float>(Float(size.width), Float(size.height))
         memcpy(uniformsBuffer.contents(), &uniforms, MemoryLayout<Uniforms>.stride)
+    }
+    
+    func update(pos: CGPoint) {
+        print("renderers: update")
+        uniforms.pos = SIMD2<Float>(Float(pos.x), Float(pos.y))
     }
     
     func draw(in view: MTKView) {

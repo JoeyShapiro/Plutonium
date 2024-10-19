@@ -12,6 +12,7 @@ using namespace metal;
 struct Uniforms {
     float2 resolution;
     float2 scale;
+    float2 pos;
 };
 
 struct VertexOut {
@@ -37,9 +38,9 @@ float sdBox( float3 p, float3 b )
 
 float map(float3 p, float2 uv) {
 //    p.x = p.x+0.5;
-    float out = sdBox(         p-float3(1.5,0,0.5), float3(1,0,0.5) );
-    out = min(out, sdBox(         p-float3(0.5,0,0.5), float3(1,0,0.5) ));
-    out = min(out, sdBox(         p-float3(-1.5,0,0.5), float3(1,0,0.5) ));
+    float out = sdBox(         p-float3(6,0,5), float3(5,0.5,5) );
+//    out = min(out, sdBox(         p-float3(0,0,5), float3(1,0,5) ));
+    out = min(out, sdBox(         p-float3(-6,0,10), float3(5,0.5,5) ));
     // just care about x and z
     // dont need to test all of this
     // want to figure out rotation, but i just need x+z
@@ -53,7 +54,7 @@ fragment float4 fragmentShader(VertexOut in [[stage_in]],
     uv = in.uv;
     
     float3 ro = float3(0, 0, -3);
-    float3 rd = normalize(float3(uv.x, 0, 1));
+    float3 rd = normalize(float3(uv, 1));
     float3 color = float3(0);
     float t = 0;
     
@@ -68,7 +69,7 @@ fragment float4 fragmentShader(VertexOut in [[stage_in]],
     }
     
     color = float3(t * 0.1);
-    if (abs(uv.y) > t*0.1) color = 0;
+//    if (abs(uv.y) > t*0.1) color = 0;
     
     return float4(color, 1);
 }

@@ -13,6 +13,7 @@ struct ContentView: View {
     @Query private var items: [Item]
     
     @State private var map: [[Int]] = [[1, 0, 0]]
+    @State private var pos: CGPoint = .zero
 
     var body: some View {
         HStack {
@@ -42,11 +43,29 @@ struct ContentView: View {
                     context.fill(trianglePath, with: .color(.red))
                 }
             }
-            MetalView(map: $map)//.aspectRatio(1/1, contentMode: .fit)
+            MetalView(map: $map, pos: $pos)//.aspectRatio(1/1, contentMode: .fit)
         }
+        .onKeyPress(action: { keypress in
+//            print(keypress)
+            switch keypress.characters {
+            case "w":
+                pos.x += 1
+            case "a":
+                pos.y += 1
+            case "s":
+                pos.x -= 1
+            case "d":
+                pos.y -= 1
+            default:
+                print(pos)
+            }
+            return .handled
+        })
 //            .frame(width: 1280, height: 720)
             
     }
+    
+    
 
     private func addItem() {
         withAnimation {
