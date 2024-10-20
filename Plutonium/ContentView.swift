@@ -14,6 +14,7 @@ struct ContentView: View {
     
     @State private var map: [[Int]] = [[1, 0, 0]]
     @State private var pos: CGPoint = .zero
+    @FocusState private var focused: Bool
 
     var body: some View {
         HStack {
@@ -45,6 +46,9 @@ struct ContentView: View {
             }
             MetalView(map: $map, pos: $pos)//.aspectRatio(1/1, contentMode: .fit)
         }
+        .focusable()
+        .focused($focused)
+        .focusEffectDisabled()
         .onKeyPress(action: { keypress in
 //            print(keypress)
             switch keypress.characters {

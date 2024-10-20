@@ -12,13 +12,12 @@ struct MetalView: NSViewRepresentable {
     @Binding var map: [[Int]]
     @Binding var pos: CGPoint
     private var coordinator: Coordinator
-    private var uuid: UUID = UUID()
     
     init(map: Binding<[[Int]]>, pos: Binding<CGPoint>) {
         _map = map
-        _pos = pos
-        coordinator = Coordinator(device: MTLCreateSystemDefaultDevice()!)
-        print("metal view init")
+        let device = MTLCreateSystemDefaultDevice()!
+        self.coordinator = Coordinator(device: device)
+        self._pos = pos
     }
     
     func makeNSView(context: Context) -> MTKView {
@@ -26,33 +25,29 @@ struct MetalView: NSViewRepresentable {
         // idk, have to do this and set renderer as non null otherwise idk
         // metal view is created twice. first gets update, second gets draw
         mtkView.device = MTLCreateSystemDefaultDevice()
-        mtkView.colorPixelFormat = .bgra8Unorm
         mtkView.delegate = context.coordinator
-        mtkView.preferredFramesPerSecond = 60
-        mtkView.enableSetNeedsDisplay = true
+        mtkView.colorPixelFormat = .bgra8Unorm
+//        mtkView.preferredFramesPerSecond = 60
+//        mtkView.enableSetNeedsDisplay = false
         
         return mtkView
     }
     
     func updateNSView(_ nsView: MTKView, context: Context) {
-        print(pos)
-        self.coordinator.update(pos: pos) // todo update scale and size
-        print("mv update", self.uuid)
+        self.coordinator.update(pos: self.pos) // todo update scale and size
     }
     
     func makeCoordinator() -> Coordinator {
-        self.coordinator
+        return self.coordinator
     }
     
     class Coordinator: NSObject, MTKViewDelegate {
         var renderer: Renderer
-        var uuid: UUID = UUID()
         
         init(device: MTLDevice) {
             renderer = Renderer(device: device)
             
-            super.init()
-            print("coordinator init", self.uuid)
+//            super.init()
         }
         
         func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -60,12 +55,10 @@ struct MetalView: NSViewRepresentable {
         }
         
         func update(pos: CGPoint) {
-            print("coordinator update", self.uuid)
             renderer.update(pos: pos)
         }
         
         func draw(in view: MTKView) {
-            print("coordinator draw", self.uuid)
             renderer.draw(in: view)
         }
     }

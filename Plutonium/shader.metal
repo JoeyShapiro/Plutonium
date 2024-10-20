@@ -15,6 +15,8 @@ struct Uniforms {
     float2 pos;
 };
 
+constant bool useConstants [[function_constant(0)]];
+
 struct VertexOut {
     float4 position [[position]];
     float2 uv;
@@ -36,8 +38,9 @@ float sdBox( float3 p, float3 b )
     return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }
 
-float map(float3 p, float2 uv) {
+float map(float3 p, float2 pos) {
 //    p.x = p.x+0.5;
+    p.xy += pos;
     float out = sdBox(         p-float3(6,0,5), float3(5,0.5,5) );
 //    out = min(out, sdBox(         p-float3(0,0,5), float3(1,0,5) ));
     out = min(out, sdBox(         p-float3(-6,0,10), float3(5,0.5,5) ));
@@ -48,7 +51,8 @@ float map(float3 p, float2 uv) {
 }
 
 fragment float4 fragmentShader(VertexOut in [[stage_in]],
-                               constant Uniforms &uniforms [[buffer(0)]]) {
+                               constant Uniforms &uniforms [[buffer(0)]],
+                               constant float2 &pos [[buffer(1)]]) {
     // downscale uv space
     float2 uv = floor(in.uv * uniforms.scale) / uniforms.scale;
     uv = in.uv;
@@ -60,7 +64,7 @@ fragment float4 fragmentShader(VertexOut in [[stage_in]],
     
     for (int i=0; i<80; i++) {
         float3 p = ro + rd * t;
-        float d = map(p, uv);
+        float d = map(p, pos);
         t += d;
         
 //        color = float3(i) / 80;
