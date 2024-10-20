@@ -54,13 +54,13 @@ struct PlutoniumApp: App {
                 //            print(keypress)
                 switch keypress.characters {
                 case "w":
-                    pos.x += 1
-                case "a":
                     pos.y += 1
-                case "s":
+                case "a":
                     pos.x -= 1
-                case "d":
+                case "s":
                     pos.y -= 1
+                case "d":
+                    pos.x += 1
                 default:
                     print(pos)
                 }

@@ -40,7 +40,7 @@ float sdBox( float3 p, float3 b )
 
 float map(float3 p, float2 pos) {
 //    p.x = p.x+0.5;
-    p.xy += pos;
+    p.xz += pos;
     float out = sdBox(         p-float3(6,0,5), float3(5,0.5,5) );
 //    out = min(out, sdBox(         p-float3(0,0,5), float3(1,0,5) ));
     out = min(out, sdBox(         p-float3(-6,0,10), float3(5,0.5,5) ));

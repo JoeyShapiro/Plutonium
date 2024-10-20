@@ -81,13 +81,11 @@ class Renderer: NSObject {
     
     func update(pos: CGPoint) {
         self.pos = pos
-        print(self.pos)
         self.dirty = true
     }
     
     func draw(in view: MTKView) {
         if self.dirty {
-            print("draw:", self.pos)
             self.dirty = false
         }
         guard let drawable = view.currentDrawable,
@@ -102,7 +100,8 @@ class Renderer: NSObject {
         renderEncoder.setFragmentBuffer(uniformsBuffer, offset: 0, index: 0)
         
         // Set player position as function constant
-        renderEncoder.setFragmentBytes(&self.pos, length: MemoryLayout<SIMD2<Float>>.size, index: 1)
+        var pos = SIMD2<Float>(Float(self.pos.x), Float(self.pos.y))
+        renderEncoder.setFragmentBytes(&pos, length: MemoryLayout<SIMD2<Float>>.size, index: 1)
         
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
         renderEncoder.endEncoding()
