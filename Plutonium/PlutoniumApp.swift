@@ -10,21 +10,6 @@ import SwiftData
 
 @main
 struct PlutoniumApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-    
     @State private var map: [[Int]] = [[1, 0, 0]]
     @State private var pos: CGPoint = .zero
     @FocusState private var focused: Bool
@@ -38,9 +23,8 @@ struct PlutoniumApp: App {
             HStack {
                 VStack {
                     List {
-                        ForEach(items) { item in
-                            Text(item.timestamp.description)
-                        }
+                        Text("Hello, World!")
+                        Text("Hello, World!")
                     }
                     .navigationBarBackButtonHidden(true)
                     Canvas(
@@ -83,6 +67,5 @@ struct PlutoniumApp: App {
                 return .handled
             })
         }
-        .modelContainer(sharedModelContainer)
     }
 }
