@@ -53,15 +53,17 @@ struct PlutoniumApp: App {
             .focused($focused)
             .focusEffectDisabled()
             .onKeyPress(phases: .all, action: { keypress in
+                let down = if keypress.phase == .up { false } else  { true }
+                
                 switch keypress.characters {
                 case "w":
-                    self.dir.y = keypress.phase == .down ? 0.1 : 0
+                    self.dir.y = down ? 0.1 : 0
                 case "a":
-                    self.dir.x = keypress.phase == .down ? -0.1 : 0
+                    self.dir.x = down ? -0.1 : 0
                 case "s":
-                    self.dir.y = keypress.phase == .down ? -0.1 : 0
+                    self.dir.y = down ? -0.1 : 0
                 case "d":
-                    self.dir.x = keypress.phase == .down ? 0.1 : 0
+                    self.dir.x = down ? 0.1 : 0
                 default:
                     print(pos)
                 }
