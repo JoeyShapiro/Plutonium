@@ -44,7 +44,7 @@ struct ContentView: View {
                     context.fill(trianglePath, with: .color(.red))
                 }
             }
-            MetalView(map: $map, pos: $pos)//.aspectRatio(1/1, contentMode: .fit)
+//            MetalView(map: $map, pos: $pos)//.aspectRatio(1/1, contentMode: .fit)
         }
         .focusable()
         .focused($focused)
