@@ -12,7 +12,6 @@ using namespace metal;
 struct Uniforms {
     float2 resolution;
     float2 scale;
-    float2 pos;
 };
 
 constant bool useConstants [[function_constant(0)]];
@@ -55,7 +54,7 @@ fragment float4 fragmentShader(VertexOut in [[stage_in]],
                                constant float2 &pos [[buffer(1)]]) {
     // downscale uv space
     float2 uv = floor(in.uv * uniforms.scale) / uniforms.scale;
-    uv = in.uv;
+//    uv = in.uv;
     
     float3 ro = float3(0, 0, -3);
     float3 rd = normalize(float3(uv.x, 0, 1));

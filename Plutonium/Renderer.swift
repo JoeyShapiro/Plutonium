@@ -75,7 +75,8 @@ class Renderer: NSObject {
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         uniforms.resolution = SIMD2<Float>(Float(size.width), Float(size.height))
-        uniforms.scale = SIMD2<Float>(Float(view.drawableSize.width/16), Float(view.drawableSize.width/16))
+//        view.drawableSize
+        uniforms.scale = SIMD2<Float>(Float(size.height/16), Float(size.width/16))
         memcpy(uniformsBuffer.contents(), &uniforms, MemoryLayout<Uniforms>.stride)
     }
     
