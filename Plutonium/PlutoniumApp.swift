@@ -53,6 +53,7 @@ struct PlutoniumApp: App {
             .focused($focused)
             .focusEffectDisabled()
             .onKeyPress(phases: .all, action: { keypress in
+                // could be .repeat
                 let down = if keypress.phase == .up { false } else  { true }
                 
                 switch keypress.characters {
