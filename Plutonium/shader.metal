@@ -39,7 +39,6 @@ float sdBox( float3 p, float3 b )
 
 float map(float3 p, float2 pos) {
 //    p.x = p.x+0.5;
-    p.xz += pos;
     float out = sdBox(         p-float3(6,0,5), float3(5,0,5) );
 //    out = min(out, sdBox(         p-float3(0,0,5), float3(1,0,5) ));
     out = min(out, sdBox(         p-float3(-6,0,10), float3(5,0,5) ));
@@ -63,6 +62,8 @@ fragment float4 fragmentShader(VertexOut in [[stage_in]],
     
     for (int i=0; i<80; i++) {
         float3 p = ro + rd * t;
+        p.xz += pos;
+        
         float d = map(p, pos);
         t += d;
         

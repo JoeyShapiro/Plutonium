@@ -15,6 +15,11 @@ struct PlutoniumApp: App {
     @State private var pos: CGPoint = .zero
     @FocusState private var focused: Bool
     @State private var dir: CGPoint = .zero
+    @State private var objects: [Object] = [
+        Object(x: 6, y: 5, width: 5, height: 5),
+        Object(x: -6, y: 10, width: 5, height: 5),
+        Object(x: 0, y: 0, width: 50, height: 50)
+    ]
     
     // jank, but dont want to make a game engine for tech demo
 
@@ -35,12 +40,25 @@ struct PlutoniumApp: App {
                         colorMode: .linear,
                         rendersAsynchronously: false
                     ) { context, size in
-                        let rect = CGRect(origin: .zero, size: size)
+                        // TODO need view for state
+                        for object in objects {
+                            var rect = object.CGRect()
+                            
+                            let path = Rectangle().path(in: object.CGRect())
+                            context.fill(path, with: .color(.blue))
+                        }
                         
                         let trianglePath = Path { path in
-                            path.move(to: CGPoint(x: size.width * 0.2, y: size.width * 0.8))
-                            path.addLine(to: CGPoint(x: size.width * 0.8, y: size.width * 0.8))
-                            path.addLine(to: CGPoint(x: size.width * 0.5, y: size.width * 0.2))
+                            let center = CGPoint(x: size.width/2, y: size.height/2)
+                            let size: CGFloat = 20
+                            
+                            // have to do this order, to save time too
+                            var angle = (2 * 3.14 * 0 / 3) + 3.14/6
+                            path.move(to: CGPoint(x: center.x+size*cos(angle), y: center.y+size*sin(angle)))
+                            angle = (2 * 3.14 * 1 / 3) + 3.14/6
+                            path.addLine(to: CGPoint(x: center.x+size*cos(angle), y: center.y+size*sin(angle)))
+                            angle = (2 * 3.14 * 2 / 3) + 3.14/6
+                            path.addLine(to: CGPoint(x: center.x+size*cos(angle), y: center.y+size*sin(angle)))
                             path.closeSubpath()
                         }
                         //                    context.stroke(trianglePath, with: .color(.blue), lineWidth: 5)
@@ -77,6 +95,26 @@ struct PlutoniumApp: App {
                 pos.y += dir.y
             })
         }
+    }
+}
+
+struct Object {
+    let x: Float
+    let y: Float
+    let width: Float
+    let height: Float
+    
+    func CGPoint() -> CoreFoundation.CGPoint {
+        CoreFoundation.CGPoint(x: CGFloat(self.x), y: CGFloat(self.y))
+    }
+    
+    func CGRect() -> CoreFoundation.CGRect {
+        CoreFoundation.CGRect(
+            x: CGFloat(self.x),
+            y: CGFloat(self.y),
+            width: CGFloat(self.width),
+            height: CGFloat(self.height)
+        )
     }
 }
 
